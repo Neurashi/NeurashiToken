@@ -27,7 +27,7 @@ abstract contract StandardToken is IBEP20, BasicToken {
     }
 
     function transferFrom(address from, address to, uint256 value) public override validRecipient(to) returns(bool) {
-        require(_allowed[from][msg.sender] >= value);
+        require(_allowed[from][msg.sender] >= value, "ERROR: transfer amount exceeds allowance");
         _transfer(from, to, value);
         _approve(from, msg.sender, _allowed[from][msg.sender] - value);
         return true;
