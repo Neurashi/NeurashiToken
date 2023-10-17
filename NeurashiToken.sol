@@ -5,14 +5,11 @@ pragma solidity 0.8.8;
 import "./SmartToken.sol";
 
 contract NeurashiToken is SmartToken {
-    string private _name;
-    string private _symbol;
-    uint8 private _decimals;
+    string private constant _name = "Neurashi";
+    string private constant _symbol = "NEI";
+    uint8 private immutable _decimals = 18;
     
     constructor()  {
-        _name = "Neurashi";
-        _symbol = "NEI";
-        _decimals = 18;
         address account = msg.sender;
         uint256 amount = 45000000000e18;
         totalSupply = totalSupply + amount;
@@ -20,15 +17,15 @@ contract NeurashiToken is SmartToken {
         emit Transfer(address(0), account, amount);
     }
 
-    function name() public view returns(string memory) {
+    function name() public pure returns(string memory) {
         return _name;
     }
 
-    function symbol() public view returns (string memory) {
+    function symbol() public pure returns (string memory) {
         return _symbol;
     }
 
-    function decimals() public view returns (uint8) {
+    function decimals() public pure returns (uint8) {
         return _decimals;
     }
     
