@@ -19,9 +19,9 @@ abstract contract BasicToken is BEP20Basic {
     }
     
     function _transfer(address from, address to, uint256 value) internal {
-        require(from != address(0));
-        require(value > 0);
-        require(_balances[from] >= value);
+        require(from != address(0), "ERROR: transfer from the zero address");
+        require(value > 0, "ERROR: the transfer amount is 0");
+        require(_balances[from] >= value, "ERROR: transfer amount exceeds balance");
         _balances[from] = _balances[from] - value;
         _balances[to] = _balances[to] + value;
         emit Transfer(from, to, value);
@@ -36,7 +36,7 @@ abstract contract BasicToken is BEP20Basic {
     }
  
     modifier validRecipient(address _recipient) {
-        require(_recipient != address(0) && _recipient != address(this));
+        require(_recipient != address(0) && _recipient != address(this), "ERROR: it cannot be the zero address or the address of this contract.");
     _;
     }
 }
