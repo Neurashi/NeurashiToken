@@ -16,10 +16,15 @@ abstract contract BEP677Receiver {
 
 abstract contract SmartToken is IBEP677, StandardToken {
     
-    function transferAndCall(address _to, uint256 _value, bytes memory _data) public override validRecipient(_to) returns(bool success) {
+    modifier notContract() {
+        require((!_isContract(msg.sender)) && (msg.sender == tx.origin), "contract not allowed");
+        _;
+    }
+    
+    function transferAndCall(address _to, uint256 _value, bytes memory _data) public override notContract validRecipient(_to) returns(bool success) {
         _transfer(msg.sender, _to, _value);
         emit Transfer(msg.sender, _to, _value, _data);
-        if (isContract(_to)) {
+        if (_isContract(_to)) {
             contractFallback(_to, _value, _data);
         }
         return true;
@@ -30,10 +35,12 @@ abstract contract SmartToken is IBEP677, StandardToken {
         receiver.onTokenTransfer(msg.sender, _value, _data);
     }
 
-    function isContract(address _addr) private view returns (bool hasCode) {
-        uint length;
-        assembly { length := extcodesize(_addr) }
-        return length > 0;
+    function _isContract(address addr) internal view returns (bool) {
+        uint256 size;
+        assembly {
+            size := extcodesize(addr)
+        }
+        return size > 0;
     }
     
 }
