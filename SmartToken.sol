@@ -16,12 +16,7 @@ abstract contract BEP677Receiver {
 
 abstract contract SmartToken is IBEP677, StandardToken {
     
-    modifier notContract() {
-        require((!_isContract(msg.sender)) && (msg.sender == tx.origin), "contract not allowed");
-        _;
-    }
-    
-    function transferAndCall(address _to, uint256 _value, bytes memory _data) public override notContract validRecipient(_to) returns(bool success) {
+    function transferAndCall(address _to, uint256 _value, bytes memory _data) public override validRecipient(_to) returns(bool success) {
         _transfer(msg.sender, _to, _value);
         emit Transfer(msg.sender, _to, _value, _data);
         if (_isContract(_to)) {
